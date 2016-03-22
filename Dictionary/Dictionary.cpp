@@ -35,23 +35,40 @@ void Dictionary::WorkWithDict()
 
 	while(std::getline(std::cin, userString) && userString != "...")
 	{
-		if(dict.find(userString) != dict.end())
+		if(IsWordInDict(userString))
 		{
-			std::cout << dict.at(userString) << std::endl;
+			std::cout << GetTranslation(userString) << std::endl;
 		}
 		else
 		{
 			std::cout << "Неизвестное слово " << '"' << userString << '"' << '.' <<
 				"Введите перевод или пустую строку для отказа." << std::endl;
-			if (AddWord(userString))
+
+			std::string trans;
+			std::getline(std::cin, trans);
+
+			if (!trans.empty())
+			{
+				AddWord(userString, trans);
+
+				std::cout << "Слово " << '"' << userString << '"' <<
+					" сохранено в словаре как " <<
+					'"' << trans << '"' << '.' << std::endl;
+
 				changes = true;
+			}
+			else
+			{
+				std::cout << "Слово " << '"' << userString << '"' << " проигнорировано." << std::endl;
+			}
 		}
 	}
 
-	std::cout << "В словарь были внесены изменения, сохранить?" << std::endl;
 	
 	if (changes)
 	{
+		std::cout << "В словарь были внесены изменения, сохранить?" << std::endl;
+
 		std::cin >> userString;
 		if (userString == "да")
 		{
@@ -63,24 +80,12 @@ void Dictionary::WorkWithDict()
 			std::cout << "Изменения НЕ были сохранены." << std::endl;
 		}
 	}
+
 }
 
-bool Dictionary::AddWord(std::string const& word)
+void Dictionary::AddWord(std::string const& word, std::string const& trans)
 {
-	std::string trans;
-	std::getline(std::cin, trans);
-	if (!trans.empty())
-	{
-		std::cout << "Слово " << '"' << word << '"' << " сохранено в словаре как " << '"' << trans << '"' << '.' << std::endl;
-		dict.emplace(std::move(word), std::move(trans));
-	}
-	else 
-	{
-		std::cout << "Слово " << '"' << word << '"' << " проигнорировано." << std::endl;
-		return false;
-	}
-
-	return true;
+	dict.emplace(std::move(word), std::move(trans));
 }
 
 void Dictionary::SaveChanges()
@@ -91,4 +96,22 @@ void Dictionary::SaveChanges()
 		out << pair.first << std::endl << pair.second << std::endl;
 	}
 	out.close();
+}
+
+bool Dictionary::IsWordInDict(std::string const& word)
+{
+	return dict.find(word) != dict.end();
+}
+
+std::string Dictionary::GetTranslation(std::string const& word)
+{
+	return dict.at(word);
+}
+
+void Dictionary::DeleteWord(std::string const& word)
+{
+	if (IsWordInDict(word))
+	{
+		dict.erase(word);
+	}
 }
