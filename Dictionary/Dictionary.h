@@ -1,26 +1,24 @@
 #pragma once
 #include <map>
 
-class Dictionary
+class CDictionary
 {
 public:
-	Dictionary(std::string const& fileName);
+	CDictionary(std::string const& fileName);
 
-	void WorkWithDict();
-
-	bool IsWordInDict(std::string const& word);
+	bool IsWordInDict(std::string const& word) const;
 	void AddWord(std::string const& word, std::string const& trans);
-	std::string GetTranslation(std::string const& word);
+	std::string GetTranslation(std::string const& word) const;
 	void DeleteWord(std::string const& word);
 
-	void SaveChanges();
+	void SaveChanges() const;
 	
 
 private:
 	std::map<std::string, std::string> InitDictionary();
 
 private:
-	std::string fileName;
-	std::map<std::string, std::string> dict;
+	std::string m_fileName;
+	std::map<std::string, std::string> m_dict;
 };
 

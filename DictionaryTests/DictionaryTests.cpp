@@ -1,11 +1,13 @@
 #include "stdafx.h"
+#include <direct.h>
+#include "TemporaryFile.h"
 #include "../Dictionary/Dictionary.h"
 
 BOOST_AUTO_TEST_SUITE(Dictionary_class)
 
 	BOOST_AUTO_TEST_SUITE(when_work_with_dictionary_file)
 
-		Dictionary dict("testDict.txt");
+		CDictionary dict("testDict.txt");
 
 		BOOST_AUTO_TEST_CASE(read_translations_from_it)
 		{
@@ -23,7 +25,7 @@ BOOST_AUTO_TEST_SUITE(Dictionary_class)
 			BOOST_CHECK(dict.GetTranslation(word) == trans);
 
 			dict.SaveChanges();
-			Dictionary dict("testDict.txt");
+			CDictionary dict("testDict.txt");
 			BOOST_CHECK(dict.IsWordInDict(word));
 			dict.DeleteWord(word);
 			dict.SaveChanges();
@@ -33,7 +35,8 @@ BOOST_AUTO_TEST_SUITE(Dictionary_class)
 
 	BOOST_AUTO_TEST_SUITE(when_work_without_dictionary_file)
 
-		Dictionary dict("nothing.txt");
+		CDictionary dict("nothing.txt");
+		CTemporaryFile temp("nothing.txt");
 
 		BOOST_AUTO_TEST_CASE(can_add_new_word_and_save_changes_into_new_dict_file)
 		{
@@ -45,12 +48,9 @@ BOOST_AUTO_TEST_SUITE(Dictionary_class)
 			BOOST_CHECK(dict.GetTranslation(word) == trans);
 
 			dict.SaveChanges();
-			Dictionary dict("nothing.txt");
+			CDictionary dict("nothing.txt");
 			BOOST_CHECK(dict.IsWordInDict(word));
-
-			std::remove("nothing.txt");
 		}
-
 
 	BOOST_AUTO_TEST_SUITE_END()
 

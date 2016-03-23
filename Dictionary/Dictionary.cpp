@@ -4,15 +4,15 @@
 #include <fstream>
 #include "Dictionary.h"
 
-Dictionary::Dictionary(std::string const& fileName)
-	:fileName(fileName)
-	,dict(InitDictionary())
+CDictionary::CDictionary(std::string const& fileName)
+	:m_fileName(fileName)
+	,m_dict(InitDictionary())
 {
 }
 
-std::map<std::string, std::string> Dictionary::InitDictionary()
+std::map<std::string, std::string> CDictionary::InitDictionary()
 {
-	std::ifstream in(fileName);
+	std::ifstream in(m_fileName);
 	std::string first, second;
 	std::map<std::string, std::string> fileDict;
 
@@ -24,94 +24,35 @@ std::map<std::string, std::string> Dictionary::InitDictionary()
 	return fileDict;
 }
 
-void Dictionary::WorkWithDict()
+void CDictionary::AddWord(std::string const& word, std::string const& trans)
 {
-	std::cout << "Добро пожаловать в ваш личный англо-русский словарь" << std::endl
-		<< "Введите слово перевод которого вас интересует" << std::endl
-		<< "Введите ... чтобы закончить работу со словарем" << std::endl;
-
-	std::string userString;
-	bool changes = false;
-
-	while(std::getline(std::cin, userString) && userString != "...")
-	{
-		if(IsWordInDict(userString))
-		{
-			std::cout << GetTranslation(userString) << std::endl;
-		}
-		else
-		{
-			std::cout << "Неизвестное слово " << '"' << userString << '"' << '.' <<
-				"Введите перевод или пустую строку для отказа." << std::endl;
-
-			std::string trans;
-			std::getline(std::cin, trans);
-
-			if (!trans.empty())
-			{
-				AddWord(userString, trans);
-
-				std::cout << "Слово " << '"' << userString << '"' <<
-					" сохранено в словаре как " <<
-					'"' << trans << '"' << '.' << std::endl;
-
-				changes = true;
-			}
-			else
-			{
-				std::cout << "Слово " << '"' << userString << '"' << " проигнорировано." << std::endl;
-			}
-		}
-	}
-
-	
-	if (changes)
-	{
-		std::cout << "В словарь были внесены изменения, сохранить?" << std::endl;
-
-		std::cin >> userString;
-		if (userString == "да")
-		{
-			SaveChanges();
-			std::cout << "Изменения были сохранены." << std::endl;
-		}
-		else
-		{
-			std::cout << "Изменения НЕ были сохранены." << std::endl;
-		}
-	}
-
+	m_dict.emplace(word, trans);
 }
 
-void Dictionary::AddWord(std::string const& word, std::string const& trans)
+void CDictionary::SaveChanges() const
 {
-	dict.emplace(std::move(word), std::move(trans));
-}
-
-void Dictionary::SaveChanges()
-{
-	std::ofstream out(fileName);
-	for (auto & pair : dict)
+	std::ofstream out(m_fileName);
+	for (auto & pair : m_dict)
 	{
 		out << pair.first << std::endl << pair.second << std::endl;
 	}
 	out.close();
 }
 
-bool Dictionary::IsWordInDict(std::string const& word)
+bool CDictionary::IsWordInDict(std::string const& word) const
 {
-	return dict.find(word) != dict.end();
+	return m_dict.find(word) != m_dict.end();
 }
 
-std::string Dictionary::GetTranslation(std::string const& word)
+std::string CDictionary::GetTranslation(std::string const& word) const
 {
-	return dict.at(word);
+	return m_dict.at(word);
 }
 
-void Dictionary::DeleteWord(std::string const& word)
+void CDictionary::DeleteWord(std::string const& word)
 {
 	if (IsWordInDict(word))
 	{
-		dict.erase(word);
+		m_dict.erase(word);
 	}
 }
