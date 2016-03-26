@@ -12,6 +12,7 @@
 
 #define BOOST_TEST_MODULE MyTestModule
 #define BOOST_TEST_INCLUDED
+#define _SCL_SECURE_NO_WARNINGS
 #pragma warning (disable: 4702)
 #include <boost/test/unit_test.hpp>
 

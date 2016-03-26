@@ -27,7 +27,7 @@
     <ClInclude Include="..\Dictionary\Dictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TemporaryFile.h">
+    <ClInclude Include="TemporaryFolder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClCompile Include="..\Dictionary\Dictionary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TemporaryFile.cpp">
+    <ClCompile Include="TemporaryFolder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,6 @@ class CDictionary
 public:
 	CDictionary(std::string const& fileName);
 
-	bool IsWordInDict(std::string const& word) const;
 	void AddWord(std::string const& word, std::string const& trans);
 	std::string GetTranslation(std::string const& word) const;
 	void DeleteWord(std::string const& word);

@@ -23,16 +23,16 @@ int main(int argc, char * argv[])
 
 	while (std::getline(std::cin, userString) && userString != "...")
 	{
-		if (dict.IsWordInDict(userString))
+		std::string trans = dict.GetTranslation(userString);
+		if (!trans.empty())
 		{
-			std::cout << dict.GetTranslation(userString) << std::endl;
+			std::cout << trans << std::endl;
 		}
 		else
 		{
 			std::cout << "Неизвестное слово " << '"' << userString << '"' << '.' <<
 				"Введите перевод или пустую строку для отказа." << std::endl;
 
-			std::string trans;
 			std::getline(std::cin, trans);
 
 			if (!trans.empty())

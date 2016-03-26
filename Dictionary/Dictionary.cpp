@@ -1,6 +1,10 @@
 ﻿#include "stdafx.h"
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 #include <fstream>
 #include "Dictionary.h"
 
@@ -31,7 +35,10 @@ void CDictionary::AddWord(std::string const& word, std::string const& trans)
 
 void CDictionary::SaveChanges() const
 {
-	std::ofstream out(m_fileName);
+	std::vector<std::string> splitVec;
+	boost::split(splitVec, m_fileName, boost::is_any_of("/"), boost::token_compress_on);
+
+	std::ofstream out(splitVec.back());
 	for (auto & pair : m_dict)
 	{
 		out << pair.first << std::endl << pair.second << std::endl;
@@ -39,20 +46,18 @@ void CDictionary::SaveChanges() const
 	out.close();
 }
 
-bool CDictionary::IsWordInDict(std::string const& word) const
-{
-	return m_dict.find(word) != m_dict.end();
-}
-
 std::string CDictionary::GetTranslation(std::string const& word) const
 {
-	return m_dict.at(word);
+	auto wordIt = m_dict.find(word);
+	if (wordIt == m_dict.end())
+	{
+		return "";
+	}
+
+	return wordIt->second;
 }
 
 void CDictionary::DeleteWord(std::string const& word)
 {
-	if (IsWordInDict(word))
-	{
-		m_dict.erase(word);
-	}
+	m_dict.erase(word);
 }
